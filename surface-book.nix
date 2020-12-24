@@ -1,9 +1,14 @@
 {config, lib, pkgs, ... }:
 { 
+  imports = [
+    ./surface-dtx-daemon-options.nix
+  ];
+
   nixpkgs.overlays = [(self: super: {
     libinput = super.callPackage ./libinput-1.15.0.nix {};
     libwacom = super.callPackage ./surface-libwacom.nix {};
     surface-control = super.callPackage ./surface-control.nix {};
+    surface-dtx-daemon = super.callPackage ./surface-dtx-daemon.nix {};
     surface_firmware = super.callPackage ./surface-firmware.nix {};
     surface_kernel = super.linuxPackages_4_19.extend( self: (ksuper: {
       kernel = ksuper.kernel.override {
@@ -61,7 +66,11 @@
     extraModulePackages = with config.boot.kernelPackages; [ zfs ];
   };
 
-  services.udev.packages = [ pkgs.surface_firmware pkgs.libwacom ];
+  services.udev.packages = [ pkgs.surface_firmware pkgs.libwacom pkgs.surface-dtx-daemon ];
+
+  services.surface-dtx-daemon = {
+    enable = true;
+  };
 
   services.xserver.videoDrivers = [ "intel" ];
   #services.xserver.videoDrivers = [ "nouveau" ];

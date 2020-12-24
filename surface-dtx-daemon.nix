@@ -1,4 +1,4 @@
-{stdenv, fetchurl, rustPlatform, pkgconfig, dbus}:
+{stdenv, fetchurl, rustPlatform, pkg-config, dbus}:
 rustPlatform.buildRustPackage rec {
   name = "surface-dtx-daemon-${version}";
   version = "0.1.4-3";
@@ -9,9 +9,10 @@ rustPlatform.buildRustPackage rec {
 
   patches = [ ./service.patch ];
 
-  buildInputs = [ pkgconfig dbus ];
+  buildInputs = [ dbus ];
+nativeBuildInputs = [ pkg-config ];
 
-  cargoSha256 = "1jr5l3rbfpgii1y4z29rx1vwqbsf4spqyddjpiyh4w9q7y82s7pp";
+  cargoSha256 = "0544f6c0wmraasamhh8dhq37g07wqk5karr3g87wzwaw6pqp69vj";
 
   postInstall = ''
     mkdir -p $out/etc/udev/rules.d
